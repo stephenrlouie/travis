@@ -12,7 +12,7 @@ env:
     - COMMIT=${TRAVIS_COMMIT::8}
 script:
   - make test
-  - make
+  - makegit s
 
 after_success:
   - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
@@ -22,3 +22,11 @@ after_success:
   - docker tag $REPO:$COMMIT $REPO:$TAG
   - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
   - docker push $REPO
+
+notifications:
+  slack:
+    rooms:
+      - secure: "nqcdESt3Js4EiOlvedqQp5VFeEvTm0qMGdYXZ/imPcDaJVOBktrt7+jIrk0xp+WiQcrPUuaew2VK0hOCv44jo2g4ULCBO0MUWFK83VRCP9qHF9BVtEaZz1jlgP/G0/AHhjxEH/GrxUO03lmRufDxOKMS0CzKTAcrsyJPYyHxN0nR6lkFjc9qpFdGnfNTFh9G4koik3BPKJjwSJ9iPMOPJpeDZ1jvFk4EcvNvlU80vb+XpfHpI0HhffvDzlZ1wnuGUDM42ASj8LwcFxeG/yPNHjW4WX9d5vuf5T+75DEdt417IetcdLGzwAd4LVqZjiEPDBhQPF+d4bd/kkRdf7gLjHBu73zLTRSXlBKFR5WdN593wFiPngTEg5CcUyMiJrn4N5/dviweY+jpumbvjaDfxrJZAm7ywT34P4Sb3M0gjiVDkYGPz1EuJoj/3fJEVAr4NRHLTIngnZ8Da4eLDz0wUgbAZQNLY3VZYLUR8UMz27ntOfVoarSp7kCdBxvzdoQqYUFl/MsqQAOCwFLkGJDUkMyVjvLs6Vmt11CPDAL5+tqm2bM5YihLB1KPrRPXGph6yUuer/F6Pe34zbM/0ZvdL/7OaWbdG5nurwfLfMhor9vrrIJVHxZMk4hid6AbfjaMXCbIvIxwBCTfu8Xnbj4QAbiA2D+EMcba5AbVo6k2BAE=" #SLACK STUFF
+    on_success: always
+    on_failure: always
+  email: false
