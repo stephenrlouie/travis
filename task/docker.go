@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	"cto-github.cisco.com/GSP/mu-sigma/model"
+	"github.com/stephenrlouie/travis/model"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"

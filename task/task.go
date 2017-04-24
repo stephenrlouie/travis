@@ -1,6 +1,6 @@
 package task
 
-import "cto-github.cisco.com/GSP/mu-sigma/model"
+import "github.com/stephenrlouie/travis/model"
 
 // Tasker exposes the ability to run tasks
 type Tasker interface {

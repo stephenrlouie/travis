@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"cto-github.cisco.com/GSP/mu-sigma/model"
+	"github.com/stephenrlouie/travis/model"
 )
 
 func testServiceOperation(image string, driverConfig map[string]interface{}) *model.ServiceOperation {
