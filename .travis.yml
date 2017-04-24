@@ -1,6 +1,19 @@
 language: go
-
 go:
-  - 1.7.1
-
+- 1.7.1
+env:
+  global:
+    - secure: "tY8b5tL4S4Xw3dYkXJm4kpIuNruzd4IohnRr7pM6iwTSgp3ir5ATm3n0pJzEv4AxI64kynoLJhPxu5UuuArv2Tc4ecvcLVKjD6VJyHbWu+Y599zF833BTpcO3LtsfAklFoWN9dGj/qcOydy4h0i3p4T/frpsIj0mcCnm9/8N2ANblppu4v+UxrK8RgDSQSzI7ifovuPBbTyMV7xF6i8UXUK7UEMHNm9eX+SljAQwoM4KGHZbKLgjEOqQQFT+YmQeT3MOZBdW/ZHhL2xvwlIihFUTQJuMLO4Wrg5fmQeHWraLov4p+oahs4a4MCfQjKQxd0CgyeT+t58aDq0rAjvMRZXaNKRDAVAZuKxqf4Be+xp7ManOS33tlcEHJCo8lweGcuwugbpPtjVeMLZ5dS/XypTNL3MYz8GjzKfvFfBVTNXHJxQDs9a0Pu+n9J1x/wuXudwr+BWPuHhtLzO4pBv8LhE2WAnfhMP8INgYckAlX60U6pa1je20JB943WoIiI3Qn+v814QbDiF6PlFpQt93MqvmLoVw5yTxdSTbRybWmZzzJH2rjY+3xlc88JaUsyDT8WgtN+StwEfbYonDMGmKu7AJqRxaRDig+G6FC4hpvxWzwSDZqv48v8ZcIBWXr5ob2zQzrX7wvuGkJMmSki8sRDxz5Mh1G9UQPMjOO3XoFVE=" #DOCKER_EMAIL
+    - secure: "hPBcSjAtWlzNkSdST54GPfukVJUB2KM9B1aUyvfgNWz5tO6oWYyG7YkZq0ayqc9sgTVrvQNuPUtdvwM1tBSE4HNr/taM867beBylZ3RX/KZc2evibi8sK8H2kAjLScLg749Xu4cSFXMsQOhTFWTgnkOoIR4zfvMuPRgaaCSi3fuPl+/6u8oFsZEv4VXGF2aZbEb42GxQigvw3q9KV5o6TlXZjmC87McTBrQ+tApk+f43jYDRsvdQ8khzXAf8EHDJyXRO2wFfsNp1Z02rgwbmP8kiTAaMXLB+KUtbWxYrKuRWj4V3+mCbEwFOMeqcYquZR0XTu9XcsnqVzG5xaqUj2/Fn7nkSGNPeDN69p6dJZkxFI6xdc9AIRRzNgic3NlcJAOxd95cBNdke+oyWOlYuyNK8RIu/TJSlXbwGG/jdhh/JnF4rhL630W7nEaM6KEQwm6IMcf1pwwfTER4MZEwBMxwscK2T0O+0jmM/f3l+hS+1jQJr4hX1FTO9jqTozqtQRVw6zBUs0yq9MIVRrEK1pIWAW2coLopAJmxq+Xtc1ZNUTIGsSW4wERk9cYC1mAHXGcoeGu+mP6Y5odiITc9SpVEaxj9uxKBcJzm8zzeZcqvnCP0cavySIdZcmQ5jTv5AebBXf2ewXgjgceKSBpXlnwMr3F9VgEGbzU9NMVOL/DQ=" #DOCKER_USER
+    - secure: "IxF/JiYDWqYmdg/hS04Gc531QzMwH91fxFDk6guVByohQPkXfsSXY1/RSnuTyztYUlEUoIJJ8CVX6gDewBi4Om3qPXrG6MwNLA8kietaU0R2+EBIUGzWVq0F54m66ScdyEdr/bT6LAYErSyi+PyqneRYIEx/o3tl0/niTrPPsx1R8CZPN+M7yN9VYSFLD2daqr4fu0njuYkdwp81wr5weQnw0ulRpGEwNfaZgJTh0dpRnGd+JjbNbgQpMqRB9cjugR3sqowSZv0n+NhC0xlrHvUB7mDpD1x6K9FtYQIhMwegpCnr9QX1p9uGoiUFwGDFVFpHXbt5QDrx84fMpFWShhQppDL/vYxlkhsy8hYW247LxX7VtpI0whyyvDVbx90NLfZQMwa6FyIjqpXMVTkYWhkepa0lw3isK/NrunCDxNF/pzNatWxM2Sl0E4RltnX1W1+zRs49UbvR0M4/prI8d7s3uDMqtlTL5iPFfEYXZ2i5mcnGmoIBHYCKvWZAyhgfFHkEiJWctVivkf0FisT+yLDUkoxWMunanhOdpMPNMFUxZ0CvPzn4vFR4KBBrR/4Tf3b4svKeLysKmgQAb/GEXEsk5EpxmiD0azMc1N6NvnKN4Kj6ukJk/28gSrWm0sc1lgSQlO91+FJ9OgItpkQ+ImrcbNxplrF0pYGGED0+Sf4=" #DOCKER_PASS
+    - COMMIT=${TRAVIS_COMMIT::8}
 script: make test
+
+after_success:
+  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+  - export REPO=sebestblog/travis-demo
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+  - docker build -f Dockerfile -t $REPO:$COMMIT .
+  - docker tag $REPO:$COMMIT $REPO:$TAG
+  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+  - docker push $REPO
