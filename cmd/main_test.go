@@ -12,5 +12,4 @@ func TestA(t *testing.T) {
 			t.Errorf("Test %d: Expected an error and received nothing", i)
 		}
 	}
-    t.Error("FORCED FAILURE")
 }
