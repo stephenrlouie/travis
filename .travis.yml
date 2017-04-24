@@ -12,7 +12,7 @@ env:
     - COMMIT=${TRAVIS_COMMIT::8}
 script:
   - make test
-  - makegit s
+  - make
 
 after_success:
   - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
