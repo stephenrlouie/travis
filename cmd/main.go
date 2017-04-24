@@ -9,6 +9,7 @@ func main() {
 	if err != nil {
 		fmt.Printf("A failed with ERROR: %v\n", err)
 	}
+	fmt.Printf("SUCCESS\n")
 }
 
 func A(a int) error {

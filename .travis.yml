@@ -1,6 +1,28 @@
+sudo: required
+services:
+      - docker
 language: go
-
 go:
-  - 1.7.1
+- 1.7.1
+env:
+  global:
+    - COMMIT=${TRAVIS_COMMIT::8}
+script:
+  - make test
+  - make
 
-script: make test
+after_success:
+  - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+  - docker build -f Dockerfile -t $REPO:$COMMIT .
+  - docker tag $REPO:$COMMIT $REPO:$TAG
+  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+  - docker push $REPO
+
+notifications:
+  slack:
+    rooms:
+      - $SLACK_TOKEN
+    on_success: always
+    on_failure: always
+  email: false
