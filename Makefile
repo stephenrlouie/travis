@@ -2,7 +2,7 @@
 
 EXECUTABLE ?= travis
 IMAGE ?= bin/$(EXECUTABLE)
-PACKAGES = $(shell go list ./...)
+PACKAGES = $(shell go list ./... | grep -E -v '/bin|/vendor')
 
 all: build
 
