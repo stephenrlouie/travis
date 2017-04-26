@@ -22,7 +22,8 @@ after_success:
   - if ([ ! -z "$TRAVIS_TAG" ]); then \
     && docker tag $DEV_REPO:$COMMIT $PROD_REPO:$TRAVIS_TAG \
     && fi
-  - docker push $REPO
+  - docker push $DEV_REPO
+  - docker push $PROD_REPO
 
 notifications:
   slack:
