@@ -7,16 +7,20 @@ go:
 env:
   global:
     - COMMIT=${TRAVIS_COMMIT::8}
+    - DEV_REPO=stephenrlouie/travis-dev
+    - PROD_REPO=stephenrlouie/travis-prod
 script:
   - make test
   - make
 
 after_success:
   - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-  - export REPO=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "stephenrlouie/travis-prod"; else echo "stephenrlouie/travis-dev" ; fi`
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $COMMIT ; fi`
   - echo $TRAVIS_TAG
-  - docker build -f Dockerfile -t $REPO:$TAG .
+  - docker build -f Dockerfile -t $DEV_REPO:$COMMIT .
+  - test $TRAVIS_BRANCH == "master" \
+    && docker tag $DEV_REPO:$COMMIT $PROD_REPO:latest
+  - test $TRAVIS_TAG != "" \
+    && docker tag $DEV_REPO:$COMMIT $PROD_REPO:$TRAVIS_TAG
   - docker push $REPO
 
 notifications:
