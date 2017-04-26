@@ -18,13 +18,13 @@ after_success:
   docker build -f Dockerfile -t $DEV_REPO:$COMMIT .
   docker push $DEV_REPO
 
-  if ([ $TRAVIS_BRANCH == "master" ]); then
+  if [ $TRAVIS_BRANCH == "master" ]; then
     docker tag $DEV_REPO:$COMMIT $PROD_REPO:latest
   fi
-  if ([ ! -z "$TRAVIS_TAG" ]); then
+  if [ ! -z "$TRAVIS_TAG" ]; then
     docker tag $DEV_REPO:$COMMIT $PROD_REPO:$TRAVIS_TAG
   fi
-  
+
   docker push $PROD_REPO
 
 notifications:
