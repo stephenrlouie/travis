@@ -9,6 +9,7 @@ env:
     - COMMIT=${TRAVIS_COMMIT::8}
     - DEV_REPO=stephenrlouie/travis-dev
     - PROD_REPO=stephenrlouie/travis-prod
+    - CRON_REPO=stephenrlouie/travis-cron
 script:
   - make test
   - make container
@@ -17,7 +18,7 @@ script:
   - docker push $DEV_REPO
   - if [ "$TRAVIS_BRANCH" = "master" -a "$TRAVIS_PULL_REQUEST" = "false" ]; then docker tag $DEV_REPO:$COMMIT $PROD_REPO:latest && docker push $PROD_REPO; fi
   - if [ ! -z "$TRAVIS_TAG" ]; then docker tag $DEV_REPO:$COMMIT $PROD_REPO:$TRAVIS_TAG && docker push $PROD_REPO; fi
-  - if [ "$TRAVIS_EVENT_TYPE" = "cron" ]; then docker tag $DEV_REPO:$COMMIT $DEV_REPO:cron && docker push $DEV_REPO; fi
+  - if [ "$TRAVIS_EVENT_TYPE" = "cron" ]; then docker tag $CRON_REPO:$COMMIT $CRON_REPO:cron && docker push $CRON_REPO; fi
 notifications:
   slack:
     rooms:
